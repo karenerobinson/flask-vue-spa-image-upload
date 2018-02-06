@@ -36,9 +36,9 @@ export default {
     PictureInput
   },
   methods: {
-    sendUploadToBackend (data) {
+    sendUploadToBackend (name,data) {
 	const path= `http://localhost:5000/api/upload`
-	axios.post(path,{key:data})
+	axios.post(path,{name:name, data:data})
 	console.log('tried code in sendUploadToBackend')
     },
     onChange (image) {
@@ -48,7 +48,8 @@ export default {
 	console.log(this.$refs.pictureInput.file)
 //	console.log(this.$refs.pictureInput.file.name)
         this.image = image  // idk what this is doing - kero
-	this.sendUploadToBackend(this.$refs.pictureInput.file.name)
+	this.sendUploadToBackend(this.$refs.pictureInput.file.name,
+				this.$refs.pictureInput.image)
        } else {
         console.log('FileReader API not supported: use the <form>, Luke!')
       }

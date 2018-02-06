@@ -1,5 +1,8 @@
+import base64
 import os #not sure what this is
+
 from flask import Flask
+from flask import Response
 from flask import request, redirect, url_for #added 2/5
 from flask import render_template, jsonify
 from flask_cors import CORS
@@ -27,21 +30,25 @@ def upload_me():
     print ("now in the route for api/upload")
     if request.method == 'GET':
        """ show the information"""
-       import json
        print ("now in if GET")
-       with open("foo.data", "rb") as f:
-           string = f.read()
-       object = json.loads(string.decode("utf-8"))
-       return object["key"]
+       with open("foo.image", "rb") as f:
+           data = f.read().decode("utf-8")
+           data = data[len("data:"):]  # strip off "data:"
+           header, data = data.split(",",1)
+           mimetype = header.split(";")[0]
+           return Response(base64.b64decode(data), mimetype=mimetype)
+       with open("foo.name", "rb") as f:
+           return f.read()
     if request.method == 'POST':
        """ return the information"""
-       data = request.form
+       import json
+       data = json.loads(request.get_data().decode("ascii"))
        print (type(data))
        print (request.get_data())
-       with open("foo.data", "wb") as f:
-           string = request.get_data()
-           f.write(string)
-       return jsonify (data["key"])
+       with open("foo.image", "wb") as img:
+           img.write(data["data"].encode("utf-8"))
+       with open("foo.name", "wb") as f:
+           f.write(data["name"].encode("utf-8"))
        return jsonify (data)
        
 
