@@ -6,14 +6,9 @@ from flask import Flask, Response, request, redirect, url_for, render_template, 
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = "uploads"
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER 
 
 CORS(app)
 
