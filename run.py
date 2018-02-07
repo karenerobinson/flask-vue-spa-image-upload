@@ -8,15 +8,15 @@ app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
 
-CORS(app)
 
 @app.route('/api/random', methods=['GET'])
 def random_number():
     response = {'randomNumber': random.randint(1, 100)}
     return jsonify(response)
 
+
 @app.route('/api/upload', methods=['GET','POST'])
-@cross_origin()
+@cross_origin(allow_headers=['Content-Type'])
 def upload_me():
     if request.method == 'GET':
         """ Show image if already uploaded """
