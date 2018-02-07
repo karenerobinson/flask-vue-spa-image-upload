@@ -19,19 +19,22 @@ def random_number():
 @cross_origin(allow_headers=['Content-Type'])
 def upload_me():
     if request.method == 'GET':
-        """ Show image if already uploaded """
-        print(request.files)
-        return render_template('index.html')
+        """ Show saved image """
+        with open('file.img', 'r') as rf:
+            data = rf.read()
+            mimetype, image_string = data.split(';base64,')
+            image_bytes = image_string.encode('utf-8')
+            return Response(base64.decodebytes(image_bytes), mimetype=mimetype)
+
     if request.method == 'POST':
-       """ return the information"""
-       data = json.loads(request.get_data().decode("ascii"))
-       print(type(data))
-       print(request.get_data())
-       with open("foo.image", "wb") as img:
-           img.write(data["data"].encode("utf-8"))
-       with open("foo.name", "wb") as f:
-           f.write(data["name"].encode("utf-8"))
-       return jsonify (data)
+        """ Receive base 64 encoded image """
+        request_data = json.loads(request.get_data())
+        data = request_data['data'][5:]
+
+        with open('file.img', 'w') as wf:
+            wf.write(data)
+
+        return Response(status=200)
        
 
 @app.route('/', defaults={'path': ''})
