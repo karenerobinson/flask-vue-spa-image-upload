@@ -1,7 +1,7 @@
 import base64
 import random # Avoid * imports as they add a lot of unkwnown namespaces to your file
 import json
-from flask import Flask, Response, request, redirect, url_for, render_template, jsonify
+from flask import Flask, Response, request, render_template, jsonify
 from flask_cors import cross_origin
 
 app = Flask(__name__,
