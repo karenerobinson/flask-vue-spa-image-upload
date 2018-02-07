@@ -1,3 +1,4 @@
+import os
 import base64
 import random # Avoid * imports as they add a lot of unkwnown namespaces to your file
 import json
@@ -21,11 +22,12 @@ def random_number():
 def upload_me():
     if request.method == 'GET':
         """ Show saved image """
-        with open('file.img', 'r') as rf:
-            data = rf.read()
-            mimetype, image_string = data.split(';base64,')
-            image_bytes = image_string.encode('utf-8')
-            return Response(base64.decodebytes(image_bytes), mimetype=mimetype)
+        if os.path.exists('file.img'):
+            with open('file.img', 'r') as rf:
+                data = rf.read()
+                mimetype, image_string = data.split(';base64,')
+                image_bytes = image_string.encode('utf-8')
+                return Response(base64.decodebytes(image_bytes), mimetype=mimetype)
 
     if request.method == 'POST':
         """ Receive base 64 encoded image """
@@ -36,9 +38,11 @@ def upload_me():
             wf.write(data)
 
         return Response(status=200)
-       
+
+    return render_template('index.html')
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    return render_template("index.html")
+    return render_template('index.html')
