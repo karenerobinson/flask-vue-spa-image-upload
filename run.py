@@ -4,6 +4,7 @@ import random # Avoid * imports as they add a lot of unkwnown namespaces to your
 import json
 from flask import Flask, Response, request, render_template, jsonify
 from flask_cors import cross_origin
+from time import perf_counter
 
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -31,12 +32,16 @@ def upload_me():
 
     if request.method == 'POST':
         """ Receive base 64 encoded image """
+        start = perf_counter()
+        print('Request received')
         request_data = json.loads(request.get_data())
         data = request_data['data'][5:]
 
         with open('file.img', 'w') as wf:
             wf.write(data)
-
+            
+        print('Saved in file.')
+        print('Time elapsed: {}'.format(perf_counter() - start))
         return Response(status=200)
 
     return render_template('index.html')
