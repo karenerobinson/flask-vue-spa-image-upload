@@ -10,6 +10,7 @@ app = Flask(__name__,
 
 
 @app.route('/api/random', methods=['GET'])
+@cross_origin(allow_headers=['Content-Type'])
 def random_number():
     response = {'randomNumber': random.randint(1, 100)}
     return jsonify(response)
